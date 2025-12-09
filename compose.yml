@@ -1,0 +1,23 @@
+services:
+  builder:
+    build:
+      context: container/
+      dockerfile: Dockerfile
+      target: builder
+      args:
+        - USER_NAME=user
+        - HOME_DIR=/home/user
+        - USER_ID=${USER_ID:-1000}
+        - GROUP_ID=${GROUP_ID:-1000}
+        - SRC_DIR=${SRC_DIR:-/home/user/src}
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    image: tierbase-builder
+    volumes:
+      - .:${SRC_DIR:-/home/user/src}
+      - ./.ccache:/home/user/.ccache
+    restart: always
+    stdin_open: true
+    tty: true
